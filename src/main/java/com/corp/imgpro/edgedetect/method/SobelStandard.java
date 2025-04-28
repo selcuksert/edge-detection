@@ -25,6 +25,7 @@ public class SobelStandard {
         int[][] valMatrix = new int[3][3];
 
         double[][] sobelMatrix = Filters.getSobelMatrix();
+        double[][] transposeSobelMatrix = MatrixUtils.createRealMatrix(sobelMatrix).transpose().getData();
         int[][] edgeColorMatrix = new int[width][height];
 
         for (int i = 1; i < width - 1; i++) {
@@ -42,9 +43,7 @@ public class SobelStandard {
                 valMatrix[2][2] = convertRGBToGrayScale(image.getRGB(i + 1, j + 1));
 
                 int gx = mask(sobelMatrix, valMatrix);
-                sobelMatrix = MatrixUtils.createRealMatrix(sobelMatrix).transpose().getData();
-                int gy = mask(sobelMatrix, valMatrix);
-                sobelMatrix = MatrixUtils.createRealMatrix(sobelMatrix).transpose().getData();
+                int gy = mask(transposeSobelMatrix, valMatrix);
 
                 double gval = Math.sqrt((double) (gx * gx) + (gy * gy));
                 int g = (int) gval;

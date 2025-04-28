@@ -15,14 +15,15 @@
     </padding>
 
     <Button fx:id="selectImageBtn" text="Select Image" onAction="#process"/>
-    <HBox alignment="BASELINE_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml">
+
+    <HBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml">
         <VBox alignment="TOP_CENTER">
             <Text fx:id="selectedImageTxt" text="Selected Image" visible="false" fill="blueviolet">
                 <font>
                     <Font name="Helvetica" size="13"/>
                 </font>
             </Text>
-            <ImageView fx:id="selectedImageView" fitWidth="600" preserveRatio="true"/>
+            <ImageView fx:id="selectedImageView" preserveRatio="true"/>
         </VBox>
         <VBox alignment="TOP_CENTER">
             <Text fx:id="stdEdgeDetectImageTxt" text="Standard Edge Detection" visible="false" fill="blue">
@@ -30,7 +31,7 @@
                     <Font name="Helvetica" size="13"/>
                 </font>
             </Text>
-            <ImageView fx:id="stdEdgeDetectImageView" fitWidth="600" preserveRatio="true"/>
+            <ImageView fx:id="stdEdgeDetectImageView" preserveRatio="true"/>
         </VBox>
         <VBox alignment="TOP_CENTER">
             <Text fx:id="tornadoEdgeDetectImageTxt" text="TornadoVM Powered Edge Detection" visible="false"
@@ -39,12 +40,11 @@
                     <Font name="Helvetica" size="13"/>
                 </font>
             </Text>
-            <ImageView fx:id="tornadoEdgeDetectImageView" fitWidth="600" preserveRatio="true"/>
+            <ImageView fx:id="tornadoEdgeDetectImageView" preserveRatio="true"/>
         </VBox>
     </HBox>
-    <VBox alignment="BOTTOM_CENTER">
-        <BarChart fx:id="perfBarChart" prefWidth="1200"
-                  AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+    <VBox alignment="BOTTOM_CENTER" spacing="20.0">
+        <BarChart fx:id="perfBarChart"
                   visible="false" title="Performance Benchmark">
             <xAxis>
                 <CategoryAxis side="BOTTOM" label="Processing Method"/>

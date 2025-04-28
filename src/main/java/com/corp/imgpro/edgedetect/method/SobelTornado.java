@@ -75,6 +75,8 @@ public class SobelTornado {
 
         Matrix2DInt valMatrix = new Matrix2DInt(3, 3);
         Matrix2DInt sobelMatrix = Filters.getTornadoSobelMatrix();
+        Matrix2DInt transposeSobelMatrix = Filters.getTornadoSobelMatrix();
+        Matrix2DInt.transpose(transposeSobelMatrix);
 
         for (int i = 1; i < input.getNumRows() - 1; i++) {
             for (int j = 1; j < input.getNumColumns() - 1; j++) {
@@ -91,7 +93,7 @@ public class SobelTornado {
                 valMatrix.set(2, 2, convertRGBToGrayScale(input.get(i + 1, j + 1)));
 
                 int gx = mask(sobelMatrix, valMatrix);
-                int gy = mask(sobelMatrix, valMatrix);
+                int gy = mask(transposeSobelMatrix, valMatrix);
 
                 float gval = TornadoMath.sqrt((float) (gx * gx) + (gy * gy));
                 int g = (int) gval;
@@ -109,7 +111,6 @@ public class SobelTornado {
                 gval += sobelMatrix.get(k, l) * valMatrix.get(k, l);
             }
         }
-        Matrix2DInt.transpose(sobelMatrix);
         return gval;
     }
 

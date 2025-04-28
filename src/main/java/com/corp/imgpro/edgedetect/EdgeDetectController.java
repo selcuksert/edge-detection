@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,21 +59,28 @@ public class EdgeDetectController {
 
     @FXML
     protected void process() {
-        selectImageBtn.setDisable(true);
-        selectImageBtn.setText("Processing... Please wait...");
-        selectedImageTxt.setVisible(false);
-        stdEdgeDetectImageTxt.setVisible(false);
-        tornadoEdgeDetectImageTxt.setVisible(false);
-        perfBarChart.setVisible(false);
-        FileChooser fileChooser = new FileChooser();
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
         try {
-            File selectedFile = fileChooser.showOpenDialog(selectImageBtn.getScene().getWindow());
+            selectImageBtn.setDisable(true);
+            selectImageBtn.setText("Processing... Please wait...");
+            selectedImageTxt.setVisible(false);
+            stdEdgeDetectImageTxt.setVisible(false);
+            tornadoEdgeDetectImageTxt.setVisible(false);
+            perfBarChart.setVisible(false);
+            FileChooser fileChooser = new FileChooser();
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            Scene scene = selectImageBtn.getScene();
+            Window window = scene.getWindow();
+            double sceneWidth = scene.getWidth();
+            double sceneHeight = scene.getHeight();
+
+            File selectedFile = fileChooser.showOpenDialog(window);
             URL imagePath = selectedFile.toURI().toURL();
             selectedImageView.setImage(new Image(imagePath.toURI().toString()));
             File imageFile = new File(imagePath.toURI());
             BufferedImage image = ImageIO.read(imageFile);
-            series.setName(String.format("%s x %s", selectedImageView.getImage().getWidth(), selectedImageView.getImage().getHeight()));
+            double selectedImageWidth = selectedImageView.getImage().getWidth();
+            double selectedImageHeight = selectedImageView.getImage().getHeight();
+            series.setName(String.format("%s x %s", selectedImageWidth, selectedImageHeight));
 
             Instant start = Instant.now();
             BufferedImage convertedImage = SobelStandard.convert(image);
@@ -81,18 +90,30 @@ public class EdgeDetectController {
             stdEdgeDetectImageView.setImage(SwingFXUtils.toFXImage(convertedImage, null));
             series.getData().add(createData("Standard", timeElapsed));
 
-            start = Instant.now();
+            Instant startTornado = Instant.now();
             convertedImage = SobelTornado.convert(image);
-            finish = Instant.now();
-            timeElapsed = Duration.between(start, finish).toMillis();
-            logger.info("[TornadoVM] Execution time (msecs): {}", timeElapsed);
+            Instant finishTornado = Instant.now();
+            long tornadoTimeElapsed = Duration.between(startTornado, finishTornado).toMillis();
+            logger.info("[TornadoVM] Execution time (msecs): {}", tornadoTimeElapsed);
             tornadoEdgeDetectImageView.setImage(SwingFXUtils.toFXImage(convertedImage, null));
             selectedImageTxt.setVisible(true);
             stdEdgeDetectImageTxt.setVisible(true);
             tornadoEdgeDetectImageTxt.setVisible(true);
-            series.getData().add(createData("TornadoVM", timeElapsed));
-
+            series.getData().add(createData("TornadoVM", tornadoTimeElapsed));
             perfBarChart.getData().add(series);
+
+            if (selectedImageHeight > sceneHeight / 2) {
+                selectedImageView.setFitHeight(sceneHeight / 2);
+                stdEdgeDetectImageView.setFitHeight(sceneHeight / 2);
+                tornadoEdgeDetectImageView.setFitHeight(sceneHeight / 2);
+            }
+
+            if (selectedImageWidth > sceneWidth / 3) {
+                selectedImageView.setFitWidth(sceneWidth / 3);
+                stdEdgeDetectImageView.setFitWidth(sceneWidth / 3);
+                tornadoEdgeDetectImageView.setFitWidth(sceneWidth / 3);
+            }
+
         } catch (IOException | URISyntaxException e) {
             logger.error("ERROR:", e);
         } finally {
