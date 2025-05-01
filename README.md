@@ -105,28 +105,57 @@ As an example for existing Eclipse Temurin JDK 21 on a macOS:
 - **Configurable Parameters**: Adjust Sobel operator parameters in real-time
 - **Comprehensive Logging**: Detailed logging using SLF4J and Logback
 
-## Building the Project
-
-1. Ensure you have JDK 21 and Maven installed
-2. Install TornadoVM following the [official guide](https://github.com/beehive-lab/TornadoVM)
-3. Clone this repository
-4. Build the project:
-    ```shell
-    mvn clean install
-    ```
-
 ## Running the Application
 
-### Using Maven
+### Using IDE
 
-```shell
-mvn clean javafx:run
-```
+To run a TornadoVM app, one should use output of `tornado --printJavaFlags` CLI command. The following lines should be modified as this project is a JavaFx app.
 
-### Using JAR file
+* Install JavaFx runtime to your PC and prepend the lib path to module path setting:
+   ```text
+   --module-path [JAVA_FX_PATH/lib]:[TORNADO CLI COMMAND MODULE PATH]
+   ```
 
-```shell
-java --enable-preview --add-modules=jdk.incubator.vector -jar target/edgedetect-1.0-SNAPSHOT.jar
+* Add modules for JavaFX:
+   ``` text
+   --add-modules [TORNADO CLI COMMAND MODULES],javafx.controls,javafx.fxml
+   ```
+
+* Add the following as a workaround for host with Turkish locale
+   ``` text
+   -Duser.country=EN
+   -Duser.language=us
+   ```
+
+An example VM option set:
+
+```text
+-server
+-XX:-UseCompressedOops
+-XX:+UnlockExperimentalVMOptions
+-XX:+EnableJVMCI
+-XX:-UseCompressedClassPointers
+--enable-preview
+-Djava.library.path=/usr/local/share/TornadoVM/bin/sdk/lib
+--module-path
+/usr/local/share/JavaFX/javafx-sdk-21.0.7/lib:/usr/local/share/TornadoVM/bin/sdk/share/java/tornado
+-Dtornado.load.api.implementation=uk.ac.manchester.tornado.runtime.tasks.TornadoTaskGraph
+-Dtornado.load.runtime.implementation=uk.ac.manchester.tornado.runtime.TornadoCoreRuntime
+-Dtornado.load.tornado.implementation=uk.ac.manchester.tornado.runtime.common.Tornado
+-Dtornado.load.annotation.implementation=uk.ac.manchester.tornado.annotation.ASMClassVisitor
+-Dtornado.load.annotation.parallel=uk.ac.manchester.tornado.api.annotations.Parallel
+--upgrade-module-path
+/usr/local/share/TornadoVM/bin/sdk/share/java/graalJars
+-XX:+UseParallelGC
+@/usr/local/share/TornadoVM/bin/sdk/etc/exportLists/common-exports
+@/usr/local/share/TornadoVM/bin/sdk/etc/exportLists/opencl-exports
+--add-modules
+ALL-SYSTEM,tornado.runtime,tornado.annotation,tornado.drivers.common,tornado.drivers.opencl,javafx.controls,javafx.fxml
+-Dtornado.debug=False
+-Dtornado.printKernel=False
+-Dtornado.threadInfo=False
+-Duser.country=EN
+-Duser.language=us
 ```
 
 ## Implementation Details
