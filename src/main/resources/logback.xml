@@ -13,7 +13,7 @@
     </appender>
 
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
-        <!-- use discarding threshold of zero to avoid ignoring INFO level messages see docs -->
+        <!-- use discarding a threshold of zero to avoid ignoring INFO level messages see docs -->
         <discardingThreshold>0</discardingThreshold>
         <appender-ref ref="FILE" />
     </appender>

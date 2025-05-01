@@ -1,6 +1,6 @@
 # Edge Detection with Sobel Method
 
-A high-performance Java application that implements edge detection using the Sobel operator. This project showcases the power of modern Java features by implementing both standard CPU processing and hardware-accelerated processing using TornadoVM.
+A high-performance Java application that implements edge detection using the Sobel operator. This project showcases the power of modern Java features by implementing both standard CPU processing and hardware-accelerated processing using [TornadoVM](https://www.tornadovm.org/).
 
 ## Overview
 
@@ -16,6 +16,82 @@ The application features a JavaFX-based GUI for easy interaction and real-time i
 - Maven 3.x
 - TornadoVM 1.1.0 runtime
 - Graphics card supporting OpenCL (for TornadoVM acceleration)
+
+## Installing TornadoVM
+
+[Instructions](https://tornadovm.readthedocs.io/en/latest/installation.html#installation-configuration) from the official site can be used.
+
+As an example for existing Eclipse Temurin JDK 21 on a macOS:
+
+1. Clone TornadoVM repo and run installation script:
+   ```shell
+   cd /usr/local/share/
+   git clone https://github.com/beehive-lab/TornadoVM.git
+   cd TornadoVM
+   ./bin/tornadovm-installer --jdk temurin-jdk-21 --javaHome $JAVA_HOME --backend opencl
+   ```
+2. The following prompt should be displayed on console:
+   ```text
+   ###########################################################################
+   Tornado build success
+   Updating PATH and TORNADO_SDK to tornado-sdk-....
+   Commit  : ....
+   ###########################################################################
+   ------------------------------------------
+          TornadoVM installation done        
+   ------------------------------------------
+   Creating source file ......................
+   ........................................[ok]
+   ```
+3. Append the following line to `~/.zshrc` for environment settings:
+   ```text
+   # Set TornadoVM variables
+   source /usr/local/share/TornadoVM/setvars.sh
+   ```
+4. On a new terminal shell list accelerator devices available to TornadoVM:
+   ```shell
+   tornado --devices
+   ```
+   An output like this should be displayed:
+   ```text
+   Number of Tornado drivers: 1
+   Driver: OpenCL
+   Total number of OpenCL devices  : 3
+   Tornado device=0:0  (DEFAULT)
+   OPENCL --  [Apple] -- Intel(R) UHD Graphics 630
+   Global Memory Size: 1,5 GB
+   Local Memory Size: 64,0 KB
+   Workgroup Dimensions: 3
+   Total Number of Block Threads: [256]
+   Max WorkGroup Configuration: [256, 256, 256]
+   Device OpenCL C version: OpenCL C 1.2
+   
+   Tornado device=0:1
+   OPENCL --  [Apple] -- AMD Radeon Pro 5500M Compute Engine
+   Global Memory Size: 4,0 GB
+   Local Memory Size: 64,0 KB
+   Workgroup Dimensions: 3
+   Total Number of Block Threads: [256]
+   Max WorkGroup Configuration: [256, 256, 256]
+   Device OpenCL C version: OpenCL C 1.2
+   
+   Tornado device=0:2
+   OPENCL --  [Apple] -- Intel(R) Core(TM) i9-9880H CPU @ 2.30GHz
+   Global Memory Size: 32,0 GB
+   Local Memory Size: 32,0 KB
+   Workgroup Dimensions: 3
+   Total Number of Block Threads: [1024]
+   Max WorkGroup Configuration: [1024, 1, 1]
+   Device OpenCL C version: OpenCL C 1.2
+   ```
+5. Run TornadoVM unit tests with the following JVM parameters as a workaround if you are using Turkish locale ([issue](https://github.com/beehive-lab/TornadoVM/issues/605) filed to project):
+   ```shell
+   tornado-test -V --jvm="-Duser.country=US -Duser.language=en"
+   ```
+   Run a specific example to test installation:
+      ```shell
+      tornado --jvm="-Duser.country=US -Duser.language=en" -m tornado.examples/uk.ac.manchester.tornado.examples.compute.MonteCarlo
+      ```
 
 ## Features
 
@@ -36,7 +112,7 @@ The application features a JavaFX-based GUI for easy interaction and real-time i
 3. Clone this repository
 4. Build the project:
     ```shell
-    bash mvn clean install
+    mvn clean install
     ```
 
 ## Running the Application
@@ -69,7 +145,6 @@ java --enable-preview --add-modules=jdk.incubator.vector -jar target/edgedetect-
 
 - **JavaFX** (21.0.5): UI framework
 - **TornadoVM** (1.1.0): Hardware acceleration
-- **Apache Commons Math** (4.0-beta1): Mathematical operations
 - **ControlsFX** (11.2.1): Enhanced JavaFX controls
 - **SLF4J/Logback** (2.0.17/1.5.17): Logging framework
 - **JUnit** (5.10.2): Testing framework
@@ -127,6 +202,6 @@ Check the `logs/data.log` file for detailed error information and stack traces.
 
 ## Acknowledgments
 
-- TornadoVM team for the hardware acceleration framework
+- [TornadoVM](https://www.tornadovm.org/) team for the acceleration framework
 - JavaFX community for UI components
 - OpenJDK team for Vector API development

@@ -32,39 +32,76 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * Controller class for the edge detection application's user interface.
+ * This class manages the interaction between the UI components and the edge detection
+ * processing logic, handling image selection, processing, and result visualization.
+ * It supports two edge detection methods: standard Sobel and TornadoVM-accelerated Sobel.
+ *
+ * <p>The controller provides functionality to:</p>
+ * <ul>
+ *     <li>Select and load input images</li>
+ *     <li>Process images using both standard and TornadoVM-based Sobel edge detection</li>
+ *     <li>Display the original and processed images</li>
+ *     <li>Show performance comparison between the two processing methods</li>
+ * </ul>
+ */
 public class EdgeDetectController {
+    /** Logger instance for this class */
     private static final Logger logger = LoggerFactory.getLogger(EdgeDetectController.class);
 
+    /** Separator for visual organization of the top section */
     @FXML
     public Separator topSeperator;
 
+    /** Separator for visual organization of the bottom section */
     @FXML
     public Separator bottomSeperator;
 
+    /** Text display for the selected image information */
     @FXML
     private Text selectedImageTxt;
 
+    /** Text display for the standard edge detection result information */
     @FXML
     private Text stdEdgeDetectImageTxt;
 
+    /** Text display for the TornadoVM edge detection result information */
     @FXML
     private Text tornadoEdgeDetectImageTxt;
 
+    /** Button for initiating image selection */
     @FXML
     private Button selectImageBtn;
 
+    /** ImageView for displaying the selected input image */
     @FXML
     private ImageView selectedImageView;
 
+    /** ImageView for displaying the standard Sobel edge detection result */
     @FXML
     private ImageView stdEdgeDetectImageView;
 
+    /** ImageView for displaying the TornadoVM Sobel edge detection result */
     @FXML
     private ImageView tornadoEdgeDetectImageView;
 
+    /** Bar chart for displaying performance comparison between methods */
     @FXML
     private BarChart<String, Number> perfBarChart;
 
+    /**
+     * Handles the image processing workflow when triggered by user interaction.
+     * This method performs the following steps:
+     * <ol>
+     *     <li>Updates UI state to indicate processing</li>
+     *     <li>Opens file chooser for image selection</li>
+     *     <li>Processes the selected image using both standard and TornadoVM Sobel methods</li>
+     *     <li>Measures and displays performance metrics</li>
+     *     <li>Updates the UI with processed images and performance data</li>
+     *     <li>Adjusts image display sizes to fit the window</li>
+     * </ol>
+     */
     @FXML
     protected void process() {
         try {
@@ -99,7 +136,7 @@ public class EdgeDetectController {
             BufferedImage convertedImage = SobelStandard.convert(image);
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            logger.debug("[Standard] Execution time (msecs): {}", timeElapsed);
+            logger.info("[Standard] Execution time (msecs): {}", timeElapsed);
             stdEdgeDetectImageView.setImage(SwingFXUtils.toFXImage(convertedImage, null));
             series.getData().add(createData("Standard", timeElapsed));
 
@@ -138,6 +175,19 @@ public class EdgeDetectController {
         }
     }
 
+    /**
+     * Creates a data point for the performance bar chart with a labeled value.
+     * This helper method generates a styled chart data point that includes:
+     * <ul>
+     *     <li>The processing method name</li>
+     *     <li>The execution time value</li>
+     *     <li>A visual label showing the execution time above the bar</li>
+     * </ul>
+     *
+     * @param method the name of the processing method (e.g., "Standard" or "TornadoVM")
+     * @param execTime the execution time in milliseconds
+     * @return a configured XYChart.Data object ready for display
+     */
     private XYChart.Data<String, Number> createData(String method, long execTime) {
         XYChart.Data<String, Number> data = new XYChart.Data<>(method, execTime);
 
