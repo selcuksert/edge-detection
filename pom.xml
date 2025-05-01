@@ -20,7 +20,6 @@
         <tornado-version>1.1.0</tornado-version>
         <logback-version>1.5.17</logback-version>
         <slf4j-version>2.0.17</slf4j-version>
-        <apache-commons-math-version>4.0-beta1</apache-commons-math-version>
     </properties>
 
     <dependencies>
@@ -80,11 +79,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math4-core</artifactId>
-            <version>${apache-commons-math-version}</version>
         </dependency>
     </dependencies>
 

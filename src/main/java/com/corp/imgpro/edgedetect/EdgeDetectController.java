@@ -12,6 +12,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -27,11 +28,18 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 
 public class EdgeDetectController {
     private static final Logger logger = LoggerFactory.getLogger(EdgeDetectController.class);
+
+    @FXML
+    public Separator topSeperator;
+
+    @FXML
+    public Separator bottomSeperator;
 
     @FXML
     private Text selectedImageTxt;
@@ -66,6 +74,8 @@ public class EdgeDetectController {
             stdEdgeDetectImageTxt.setVisible(false);
             tornadoEdgeDetectImageTxt.setVisible(false);
             perfBarChart.setVisible(false);
+            topSeperator.setVisible(false);
+            bottomSeperator.setVisible(false);
             FileChooser fileChooser = new FileChooser();
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             Scene scene = selectImageBtn.getScene();
@@ -74,19 +84,22 @@ public class EdgeDetectController {
             double sceneHeight = scene.getHeight();
 
             File selectedFile = fileChooser.showOpenDialog(window);
+            assert selectedFile != null;
             URL imagePath = selectedFile.toURI().toURL();
+            DecimalFormat df = new DecimalFormat("#");
             selectedImageView.setImage(new Image(imagePath.toURI().toString()));
             File imageFile = new File(imagePath.toURI());
             BufferedImage image = ImageIO.read(imageFile);
             double selectedImageWidth = selectedImageView.getImage().getWidth();
             double selectedImageHeight = selectedImageView.getImage().getHeight();
-            series.setName(String.format("%s x %s", selectedImageWidth, selectedImageHeight));
+            series.setName(String.format("%s x %s", df.format(selectedImageWidth),
+                    df.format(selectedImageHeight)));
 
             Instant start = Instant.now();
             BufferedImage convertedImage = SobelStandard.convert(image);
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            logger.info("[Standard] Execution time (msecs): {}", timeElapsed);
+            logger.debug("[Standard] Execution time (msecs): {}", timeElapsed);
             stdEdgeDetectImageView.setImage(SwingFXUtils.toFXImage(convertedImage, null));
             series.getData().add(createData("Standard", timeElapsed));
 
@@ -114,6 +127,8 @@ public class EdgeDetectController {
                 tornadoEdgeDetectImageView.setFitWidth(sceneWidth / 3);
             }
 
+            topSeperator.setVisible(true);
+            bottomSeperator.setVisible(true);
         } catch (IOException | URISyntaxException e) {
             logger.error("ERROR:", e);
         } finally {
