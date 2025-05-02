@@ -24,19 +24,19 @@ public class Filters {
      * @return A 3x3 integer array representing the Sobel X operator
      */
     public static int[][] getSobelXMatrix() {
-        int[][] sobelMatrix = new int[3][3];
+        int[][] sobelXMatrix = new int[3][3];
 
-        sobelMatrix[0][0] = -1;
-        sobelMatrix[0][1] = 0;
-        sobelMatrix[0][2] = 1;
-        sobelMatrix[1][0] = -2;
-        sobelMatrix[1][1] = 0;
-        sobelMatrix[1][2] = 2;
-        sobelMatrix[2][0] = -1;
-        sobelMatrix[2][1] = 0;
-        sobelMatrix[2][2] = 1;
+        sobelXMatrix[0][0] = -1;
+        sobelXMatrix[0][1] = 0;
+        sobelXMatrix[0][2] = 1;
+        sobelXMatrix[1][0] = -2;
+        sobelXMatrix[1][1] = 0;
+        sobelXMatrix[1][2] = 2;
+        sobelXMatrix[2][0] = -1;
+        sobelXMatrix[2][1] = 0;
+        sobelXMatrix[2][2] = 1;
 
-        return sobelMatrix;
+        return sobelXMatrix;
     }
 
     /**
@@ -45,19 +45,19 @@ public class Filters {
      * @return A 3x3 integer array representing the Sobel Y operator
      */
     public static int[][] getSobelYMatrix() {
-        int[][] transposeSobelMatrix = new int[3][3];
+        int[][] sobelYMatrix = new int[3][3];
 
-        transposeSobelMatrix[0][0] = -1;
-        transposeSobelMatrix[0][1] = -2;
-        transposeSobelMatrix[0][2] = -1;
-        transposeSobelMatrix[1][0] = 0;
-        transposeSobelMatrix[1][1] = 0;
-        transposeSobelMatrix[1][2] = 0;
-        transposeSobelMatrix[2][0] = 1;
-        transposeSobelMatrix[2][1] = 2;
-        transposeSobelMatrix[2][2] = 1;
+        sobelYMatrix[0][0] = -1;
+        sobelYMatrix[0][1] = -2;
+        sobelYMatrix[0][2] = -1;
+        sobelYMatrix[1][0] = 0;
+        sobelYMatrix[1][1] = 0;
+        sobelYMatrix[1][2] = 0;
+        sobelYMatrix[2][0] = 1;
+        sobelYMatrix[2][1] = 2;
+        sobelYMatrix[2][2] = 1;
 
-        return transposeSobelMatrix;
+        return sobelYMatrix;
     }
 
     /**
@@ -66,19 +66,19 @@ public class Filters {
      * @return A Matrix2DInt representing the Sobel X operator
      */
     public static Matrix2DInt getTornadoSobelXMatrix() {
-        Matrix2DInt tornadoSobelMatrix = new Matrix2DInt(3, 3);
+        Matrix2DInt tornadoSobelXMatrix = new Matrix2DInt(3, 3);
 
-        tornadoSobelMatrix.set(0, 0, -1);
-        tornadoSobelMatrix.set(0, 1, 0);
-        tornadoSobelMatrix.set(0, 2, 1);
-        tornadoSobelMatrix.set(1, 0, -2);
-        tornadoSobelMatrix.set(1, 1, 0);
-        tornadoSobelMatrix.set(1, 2, 2);
-        tornadoSobelMatrix.set(2, 0, -1);
-        tornadoSobelMatrix.set(2, 1, 0);
-        tornadoSobelMatrix.set(2, 2, 1);
+        tornadoSobelXMatrix.set(0, 0, -1);
+        tornadoSobelXMatrix.set(0, 1, 0);
+        tornadoSobelXMatrix.set(0, 2, 1);
+        tornadoSobelXMatrix.set(1, 0, -2);
+        tornadoSobelXMatrix.set(1, 1, 0);
+        tornadoSobelXMatrix.set(1, 2, 2);
+        tornadoSobelXMatrix.set(2, 0, -1);
+        tornadoSobelXMatrix.set(2, 1, 0);
+        tornadoSobelXMatrix.set(2, 2, 1);
 
-        return tornadoSobelMatrix;
+        return tornadoSobelXMatrix;
     }
 
     /**
@@ -87,18 +87,18 @@ public class Filters {
      * @return A Matrix2DInt representing the Sobel Y operator
      */
     public static Matrix2DInt getTornadoSobelYMatrix() {
-        Matrix2DInt transposeTornadoSobelMatrix = new Matrix2DInt(3, 3);
+        Matrix2DInt tornadoSobelYMatrix = new Matrix2DInt(3, 3);
 
-        transposeTornadoSobelMatrix.set(0, 0, -1);
-        transposeTornadoSobelMatrix.set(0, 1, -2);
-        transposeTornadoSobelMatrix.set(0, 2, -1);
-        transposeTornadoSobelMatrix.set(1, 0, 0);
-        transposeTornadoSobelMatrix.set(1, 1, 0);
-        transposeTornadoSobelMatrix.set(1, 2, 0);
-        transposeTornadoSobelMatrix.set(2, 0, 1);
-        transposeTornadoSobelMatrix.set(2, 1, 2);
-        transposeTornadoSobelMatrix.set(2, 2, 1);
+        tornadoSobelYMatrix.set(0, 0, -1);
+        tornadoSobelYMatrix.set(0, 1, -2);
+        tornadoSobelYMatrix.set(0, 2, -1);
+        tornadoSobelYMatrix.set(1, 0, 0);
+        tornadoSobelYMatrix.set(1, 1, 0);
+        tornadoSobelYMatrix.set(1, 2, 0);
+        tornadoSobelYMatrix.set(2, 0, 1);
+        tornadoSobelYMatrix.set(2, 1, 2);
+        tornadoSobelYMatrix.set(2, 2, 1);
 
-        return transposeTornadoSobelMatrix;
+        return tornadoSobelYMatrix;
     }
 }

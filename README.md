@@ -161,9 +161,7 @@ ALL-SYSTEM,tornado.runtime,tornado.annotation,tornado.drivers.common,tornado.dri
 ## Implementation Details
 
 ### Standard Implementation (CPU)
-- Uses Java's Vector API for SIMD operations
 - Implements classical Sobel operator algorithm
-- Optimized for modern CPU architectures
 
 ### TornadoVM Implementation
 - Leverages GPU/FPGA acceleration
@@ -233,4 +231,3 @@ Check the `logs/data.log` file for detailed error information and stack traces.
 
 - [TornadoVM](https://www.tornadovm.org/) team for the acceleration framework
 - JavaFX community for UI components
-- OpenJDK team for Vector API development

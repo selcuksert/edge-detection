@@ -136,7 +136,6 @@ public class SobelTornado {
         Matrix2DInt valMatrix = new Matrix2DInt(3, 3);
         Matrix2DInt sobelXMatrix = Filters.getTornadoSobelXMatrix();
         Matrix2DInt sobelYMatrix = Filters.getTornadoSobelYMatrix();
-        Matrix2DInt.transpose(sobelYMatrix);
 
         for (int i = 1; i < input.getNumRows() - 1; i++) {
             for (int j = 1; j < input.getNumColumns() - 1; j++) {
