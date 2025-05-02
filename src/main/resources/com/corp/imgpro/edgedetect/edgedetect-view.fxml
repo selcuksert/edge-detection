@@ -45,14 +45,15 @@
         </VBox>
     </HBox>
     <Separator fx:id="bottomSeperator" visible="false"/>
-    <VBox alignment="BOTTOM_CENTER" spacing="20.0">
+    <VBox alignment="BOTTOM_CENTER">
         <BarChart fx:id="perfBarChart"
-                  visible="false" title="Performance Benchmark">
+                  visible="false"
+                  title="Performance Benchmark" barGap="3" categoryGap="20">
             <xAxis>
-                <CategoryAxis side="BOTTOM" label="Processing Method"/>
+                <CategoryAxis side="BOTTOM" label="Image Dimensions" animated="false"/>
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT" label="Execution time (msecs)"/>
+                <NumberAxis side="LEFT" label="Execution time (msecs)" animated="false"/>
             </yAxis>
         </BarChart>
     </VBox>

@@ -2,6 +2,10 @@
 
 A high-performance Java application that implements edge detection using the Sobel operator. This project showcases the power of modern Java features by implementing both standard CPU processing and hardware-accelerated processing using [TornadoVM](https://www.tornadovm.org/).
 
+![snapshot](/docs/snapshot.png)
+
+The project is implemented as a PoC for Medium article [Accelerating Java with TornadoVM](https://medium.com/@selcuk.sert/accelerating-java-with-tornadovm-14e3c8b2695f).
+
 ## Overview
 
 This application provides edge detection functionality using the Sobel operator with two different implementation approaches:

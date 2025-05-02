@@ -47,48 +47,75 @@ import java.time.Instant;
  * </ul>
  */
 public class EdgeDetectController {
-    /** Logger instance for this class */
+    /**
+     * Logger instance for this class
+     */
     private static final Logger logger = LoggerFactory.getLogger(EdgeDetectController.class);
 
-    /** Separator for visual organization of the top section */
+    /**
+     * Separator for visual organization of the top section
+     */
     @FXML
     public Separator topSeperator;
 
-    /** Separator for visual organization of the bottom section */
+    /**
+     * Separator for visual organization of the bottom section
+     */
     @FXML
     public Separator bottomSeperator;
 
-    /** Text display for the selected image information */
+    /**
+     * Text display for the selected image information
+     */
     @FXML
     private Text selectedImageTxt;
 
-    /** Text display for the standard edge detection result information */
+    /**
+     * Text display for the standard edge detection result information
+     */
     @FXML
     private Text stdEdgeDetectImageTxt;
 
-    /** Text display for the TornadoVM edge detection result information */
+    /**
+     * Text display for the TornadoVM edge detection result information
+     */
     @FXML
     private Text tornadoEdgeDetectImageTxt;
 
-    /** Button for initiating image selection */
+    /**
+     * Button for initiating image selection
+     */
     @FXML
     private Button selectImageBtn;
 
-    /** ImageView for displaying the selected input image */
+    /**
+     * ImageView for displaying the selected input image
+     */
     @FXML
     private ImageView selectedImageView;
 
-    /** ImageView for displaying the standard Sobel edge detection result */
+    /**
+     * ImageView for displaying the standard Sobel edge detection result
+     */
     @FXML
     private ImageView stdEdgeDetectImageView;
 
-    /** ImageView for displaying the TornadoVM Sobel edge detection result */
+    /**
+     * ImageView for displaying the TornadoVM Sobel edge detection result
+     */
     @FXML
     private ImageView tornadoEdgeDetectImageView;
 
-    /** Bar chart for displaying performance comparison between methods */
+    /**
+     * Bar chart for displaying performance comparison between methods
+     */
     @FXML
     private BarChart<String, Number> perfBarChart;
+
+    private final XYChart.Series<String, Number> seriesStandard = new XYChart.Series<>();
+
+    private final XYChart.Series<String, Number> seriesTornado = new XYChart.Series<>();
+
 
     /**
      * Handles the image processing workflow when triggered by user interaction.
@@ -105,6 +132,8 @@ public class EdgeDetectController {
     @FXML
     protected void process() {
         try {
+            seriesStandard.setName("Standard");
+            seriesTornado.setName("TornadoVM");
             selectImageBtn.setDisable(true);
             selectImageBtn.setText("Processing... Please wait...");
             selectedImageTxt.setVisible(false);
@@ -114,7 +143,6 @@ public class EdgeDetectController {
             topSeperator.setVisible(false);
             bottomSeperator.setVisible(false);
             FileChooser fileChooser = new FileChooser();
-            XYChart.Series<String, Number> series = new XYChart.Series<>();
             Scene scene = selectImageBtn.getScene();
             Window window = scene.getWindow();
             double sceneWidth = scene.getWidth();
@@ -129,16 +157,16 @@ public class EdgeDetectController {
             BufferedImage image = ImageIO.read(imageFile);
             double selectedImageWidth = selectedImageView.getImage().getWidth();
             double selectedImageHeight = selectedImageView.getImage().getHeight();
-            series.setName(String.format("%s x %s", df.format(selectedImageWidth),
-                    df.format(selectedImageHeight)));
+            String imageDim = String.format("%s x %s", df.format(selectedImageWidth),
+                    df.format(selectedImageHeight));
 
             Instant start = Instant.now();
             BufferedImage convertedImage = SobelStandard.convert(image);
             Instant finish = Instant.now();
-            long timeElapsed = Duration.between(start, finish).toMillis();
-            logger.info("[Standard] Execution time (msecs): {}", timeElapsed);
+            long standardTimeElapsed = Duration.between(start, finish).toMillis();
+            logger.info("[Standard] Execution time (msecs): {}", standardTimeElapsed);
             stdEdgeDetectImageView.setImage(SwingFXUtils.toFXImage(convertedImage, null));
-            series.getData().add(createData("Standard", timeElapsed));
+            seriesStandard.getData().add(createData(imageDim, standardTimeElapsed));
 
             Instant startTornado = Instant.now();
             convertedImage = SobelTornado.convert(image);
@@ -149,19 +177,26 @@ public class EdgeDetectController {
             selectedImageTxt.setVisible(true);
             stdEdgeDetectImageTxt.setVisible(true);
             tornadoEdgeDetectImageTxt.setVisible(true);
-            series.getData().add(createData("TornadoVM", tornadoTimeElapsed));
-            perfBarChart.getData().add(series);
+            seriesTornado.getData().add(createData(imageDim, tornadoTimeElapsed));
 
-            if (selectedImageHeight > sceneHeight / 2) {
-                selectedImageView.setFitHeight(sceneHeight / 2);
-                stdEdgeDetectImageView.setFitHeight(sceneHeight / 2);
-                tornadoEdgeDetectImageView.setFitHeight(sceneHeight / 2);
+            perfBarChart.getData().clear();
+            perfBarChart.getData().add(seriesStandard);
+            perfBarChart.getData().add(seriesTornado);
+
+            // To keep the 3 x 2 grid
+            int gridWidth = 3;
+            int gridHeight = 2;
+
+            if (selectedImageHeight > sceneHeight / gridHeight) {
+                selectedImageView.setFitHeight(sceneHeight / gridHeight);
+                stdEdgeDetectImageView.setFitHeight(sceneHeight / gridHeight);
+                tornadoEdgeDetectImageView.setFitHeight(sceneHeight / gridHeight);
             }
 
-            if (selectedImageWidth > sceneWidth / 3) {
-                selectedImageView.setFitWidth(sceneWidth / 3);
-                stdEdgeDetectImageView.setFitWidth(sceneWidth / 3);
-                tornadoEdgeDetectImageView.setFitWidth(sceneWidth / 3);
+            if (selectedImageWidth > sceneWidth / gridWidth) {
+                selectedImageView.setFitWidth(sceneWidth / gridWidth);
+                stdEdgeDetectImageView.setFitWidth(sceneWidth / gridWidth);
+                tornadoEdgeDetectImageView.setFitWidth(sceneWidth / gridWidth);
             }
 
             topSeperator.setVisible(true);
@@ -179,17 +214,17 @@ public class EdgeDetectController {
      * Creates a data point for the performance bar chart with a labeled value.
      * This helper method generates a styled chart data point that includes:
      * <ul>
-     *     <li>The processing method name</li>
+     *     <li>The dimensions of the processed image</li>
      *     <li>The execution time value</li>
      *     <li>A visual label showing the execution time above the bar</li>
      * </ul>
      *
-     * @param method the name of the processing method (e.g., "Standard" or "TornadoVM")
+     * @param imageDim the dimensions of the processed image
      * @param execTime the execution time in milliseconds
      * @return a configured XYChart.Data object ready for display
      */
-    private XYChart.Data<String, Number> createData(String method, long execTime) {
-        XYChart.Data<String, Number> data = new XYChart.Data<>(method, execTime);
+    private XYChart.Data<String, Number> createData(String imageDim, long execTime) {
+        XYChart.Data<String, Number> data = new XYChart.Data<>(imageDim, execTime);
 
         String text = String.valueOf(execTime);
 
@@ -197,7 +232,7 @@ public class EdgeDetectController {
         Label label = new Label(text);
         Group group = new Group(label);
         StackPane.setAlignment(group, Pos.TOP_CENTER);
-        StackPane.setMargin(group, new Insets(-20, 0, 0, 0));
+        StackPane.setMargin(group, new Insets(-15, 0, 0, 0));
         node.getChildren().add(group);
         data.setNode(node);
 

@@ -71,7 +71,7 @@ public class SobelTornado {
         int maxGradient = findMaxGradient(edgeImageMatrix);
 
         //@formatter:off
-        TaskGraph taskGraph = new TaskGraph("graph")
+        TaskGraph taskGraph = new TaskGraph("edge-detection-graph")
                 .transferToDevice(DataTransferMode.FIRST_EXECUTION, maxGradient, edgeImageMatrix, outputImageMatrix)
                 .task("norm", SobelTornado::norm, maxGradient, edgeImageMatrix, outputImageMatrix)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, outputImageMatrix);
@@ -167,7 +167,7 @@ public class SobelTornado {
      * Applies a mask operation between two matrices.
      *
      * @param sobelMatrix the Sobel operator matrix
-     * @param valMatrix the values matrix
+     * @param valMatrix   the values matrix
      * @return the result of the mask operation
      */
     private static int mask(Matrix2DInt sobelMatrix, Matrix2DInt valMatrix) {
@@ -185,8 +185,8 @@ public class SobelTornado {
      * This method is annotated for parallel execution with TornadoVM.
      *
      * @param maxGradient the maximum gradient value for normalization
-     * @param input the input matrix containing edge values
-     * @param output the output matrix for normalized RGB values
+     * @param input       the input matrix containing edge values
+     * @param output      the output matrix for normalized RGB values
      */
     private static void norm(int maxGradient, Matrix2DInt input, Matrix2DInt output) {
         double scale = 255.0 / maxGradient;
@@ -195,7 +195,8 @@ public class SobelTornado {
             for (@Parallel int j = 1; j < input.getNumColumns() - 1; j++) {
                 int edgeColor = input.get(i, j);
                 edgeColor = (int) (edgeColor * scale);
-                edgeColor = 0xff000000 | (edgeColor << 16) | (edgeColor << 8) | edgeColor;
+                edgeColor = 0xff000000 | (edgeColor << 16) |
+                        (edgeColor << 8) | edgeColor;
 
                 output.set(i, j, edgeColor);
             }
