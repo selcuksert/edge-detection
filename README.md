@@ -101,7 +101,6 @@ As an example for existing Eclipse Temurin JDK 21 on a macOS:
 
 - **Dual Implementation**: Choose between standard CPU processing or TornadoVM acceleration
 - **Modern Java Features**:
-    - Vector API (Preview feature) for optimized CPU processing
     - Module system integration
     - Latest JavaFX controls and features
 - **Real-time Processing**: Live preview of edge detection results
