@@ -194,7 +194,6 @@ ALL-SYSTEM,tornado.runtime,tornado.annotation,tornado.drivers.common,tornado.dri
 ## Performance Considerations
 
 - GPU acceleration provides significant speedup for large images
-- Vector API optimization improves CPU performance
 - Memory usage is optimized for both implementations
 
 ## Troubleshooting
